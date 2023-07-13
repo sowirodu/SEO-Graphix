@@ -1,0 +1,17 @@
+.profile {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.profile h2 {
+  margin-top: 0;
+}
+
+.profile p {
+  margin-bottom: 10px;
+}
+
+.profile a {
+  color: blue;
+}
