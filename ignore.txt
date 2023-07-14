@@ -1,3 +1,4 @@
+/*
 <?php
 // Connect to the database
 $servername = "localhost";
@@ -50,3 +51,4 @@ if ($result->num_rows > 0) {
 // Close the database connection
 $conn->close();
 ?>
+*/
