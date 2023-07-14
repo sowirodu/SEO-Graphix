@@ -1,0 +1,53 @@
+import sqlite3
+
+def create_profile(name, email, location, college, major, career, dream_company, linkedin, projects):
+    # Connect to the database
+    conn = sqlite3.connect('profiles.db')
+    cursor = conn.cursor()
+
+    # Prepare and execute the SQL statement
+    sql = "INSERT INTO profiles (name, email, location, college, major, career, dream_company, linkedin, projects) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    values = (name, email, location, college, major, career, dream_company, linkedin, projects)
+    cursor.execute(sql, values)
+
+    # Commit the changes and close the cursor and connection
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    print("Profile created successfully!")
+
+
+def display_profiles():
+    # Connect to the database
+    conn = sqlite3.connect('profiles.db')
+    cursor = conn.cursor()
+
+    # Retrieve the profiles from the database
+    cursor.execute("SELECT * FROM profiles")
+    profiles = cursor.fetchall()
+
+    # Check if there are profiles available
+    if len(profiles) > 0:
+        # Loop through each profile and display the data
+        for profile in profiles:
+            name, email, location, college, major, career, dream_company, linkedin, projects = profile
+
+            # Display the profile data
+            print("<div class='profile'>")
+            print(f"<h2>{name}</h2>")
+            print(f"<p>Email: {email}</p>")
+            print(f"<p>Location: {location}</p>")
+            print(f"<p>College: {college}</p>")
+            print(f"<p>Major: {major}</p>")
+            print(f"<p>Career Aspiration: {career}</p>")
+            print(f"<p>Dream Company: {dream_company}</p>")
+            print(f"<p>LinkedIn: <a href='{linkedin}' target='_blank'>{linkedin}</a></p>")
+            print(f"<p>Projects: {projects}</p>")
+            print("</div>")
+    else:
+        print("No profiles found.")
+
+    # Close the cursor and connection
+    cursor.close()
+    conn.close()
