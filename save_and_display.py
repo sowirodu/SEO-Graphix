@@ -1,11 +1,32 @@
-from flask import Flask, render_template, request
 import sqlite3
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
+
+# Connect to the SQLite database
+conn = sqlite3.connect('profiles.db')
+cursor = conn.cursor()
+
+# Create a table to store profiles if it doesn't exist
+cursor.execute('''CREATE TABLE IF NOT EXISTS profiles (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    email TEXT NOT NULL,
+                    location TEXT,
+                    college TEXT,
+                    major TEXT,
+                    career TEXT,
+                    dream_company TEXT,
+                    linkedin TEXT,
+                    projects TEXT
+                )''')
+conn.commit()
+
 
 @app.route('/')
 def index():
     return render_template('create_profile.html')
+
 
 @app.route('/save_profile', methods=['POST'])
 def save_profile():
@@ -15,40 +36,25 @@ def save_profile():
     college = request.form['college']
     major = request.form['major']
     career = request.form['career']
-    dreamCompany = request.form['dreamCompany']
+    dream_company = request.form['dreamCompany']
     linkedin = request.form['linkedin']
     projects = request.form['projects']
 
-    # Connect to the database
-    conn = sqlite3.connect('profiles.db')
-    cursor = conn.cursor()
-
-    # Prepare and execute the SQL statement
-    sql = "INSERT INTO profiles (name, email, location, college, major, career, dream_company, linkedin, projects) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-    values = (name, email, location, college, major, career, dreamCompany, linkedin, projects)
-    cursor.execute(sql, values)
-
-    # Commit the changes and close the cursor and connection
+    # Insert the profile data into the database
+    cursor.execute('''INSERT INTO profiles (name, email, location, college, major, career, dream_company, linkedin, projects)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (name, email, location, college, major, career, dream_company, linkedin, projects))
     conn.commit()
-    cursor.close()
-    conn.close()
-    return "Profile created successfully!"
 
-@app.route('/profiles')
-def profiles():
-    # Connect to the database
-    conn = sqlite3.connect('profiles.db')
-    cursor = conn.cursor()
+    return 'Profile created successfully!'
 
-    # Retrieve the profiles from the database
-    cursor.execute("SELECT * FROM profiles")
+
+@app.route('/display_profiles')
+def display_profiles():
+    cursor.execute('SELECT * FROM profiles')
     profiles = cursor.fetchall()
-
-    # Close the cursor and connection
-    cursor.close()
-    conn.close()
 
     return render_template('display_profiles.html', profiles=profiles)
 
+
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
