@@ -5,12 +5,17 @@ app = Flask(__name__)
 proxied = FlaskBehindProxy(app)  ## add this line
 app.config['SECRET_KEY'] = 'e30b92ab25051f1ed6da06292f122baf'
 @app.route("/")
+@app.route("/Seo_Tech_Conference.html")
 def hello_world():
-    return render_template('home.html', subtitle='Home Page', text='This is the home page')
+    return render_template('Seo_Tech_Conference.html')
     
-@app.route("/second_page")
-def second_page():
-    return render_template('second_page.html', subtitle='Second Page', text='This is the second page')
+@app.route('/Seo_Tech_Conference_SignUpPage.html')
+def sign_up():
+    return render_template('Seo_Tech_Conference_SignUpPage.html')
+
+@app.route('/Seo_Tech_Conference_AboutUsPage.html')
+def about_us():
+    return render_template('Seo_Tech_Conference_AboutUsPage.html')
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
